@@ -64,7 +64,7 @@ OpenGeoportal.MapController = function() {
 		this.initBasemaps();
 		this.addMapToolbarElements();
 
-		var center = this.WGS84ToMercator(0, 0);
+		var center = this.WGS84ToMercator(32, 28);
 		// set map position
 		this.setCenter(center);
 
@@ -74,7 +74,7 @@ OpenGeoportal.MapController = function() {
 			console.log("problem registering map events");
 			console.log(e);
 		}
-		
+
 	};
 
 	/**
@@ -149,8 +149,9 @@ OpenGeoportal.MapController = function() {
 		var scaleLine = new OpenLayers.Control.ScaleLine();
 
 		var attribution = new OpenLayers.Control.Attribution();
-		
-		var controls = [ zoomBar, scaleLine, displayCoords, nav, panel, attribution ];
+
+		var controls = [ zoomBar, scaleLine, displayCoords, nav, panel,
+				attribution ];
 		return controls;
 	};
 
@@ -160,7 +161,7 @@ OpenGeoportal.MapController = function() {
 	 * @returns {Number} - initial zoom level
 	 */
 	this.getInitialZoomLevel = function() {
-		var initialZoom = 1;
+		var initialZoom = 6;
 
 		if (jQuery('#' + this.containerDiv).parent().height() > 810) {
 			initialZoom = 2;
@@ -182,8 +183,8 @@ OpenGeoportal.MapController = function() {
 		// set default OpenLayers map options
 		this.mapDiv = this.containerDiv + "OLMap";
 
-		var mapBounds = new OpenLayers.Bounds(-20037508.34, -20037508.34,
-				20037508.34, 20037508.34);
+		var mapBounds = new OpenLayers.Bounds(-15037508.34, -15037508.34,
+				15037508.34, 15037508.34);
 
 		var controls = this.createOLControls();
 
@@ -195,7 +196,7 @@ OpenGeoportal.MapController = function() {
 			projection : new OpenLayers.Projection("EPSG:900913"),
 			maxResolution : 2.8125,
 			maxExtent : mapBounds,
-			numZoomLevels: 19,
+			numZoomLevels : 19,
 			units : "m",
 			zoom : initialZoom,
 			controls : controls
@@ -208,13 +209,14 @@ OpenGeoportal.MapController = function() {
 		// div defaults to 0 height for certain doc-types; we want the map to
 		// fill the parent container
 		var initialHeight;
-		if (initialZoom === 1){
+		if (initialZoom === 1) {
 			initialHeight = 512;
 		} else {
 			initialHeight = jQuery("#" + this.containerDiv).parent().height();
 		}
-		jQuery('#' + this.mapDiv).height(initialHeight).width(jQuery("#" + this.containerDiv).parent().width());
-		
+		jQuery('#' + this.mapDiv).height(initialHeight).width(
+				jQuery("#" + this.containerDiv).parent().width());
+
 		// attempt to reload tile if load fails
 		OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
 		OpenLayers.ImgPath = "resources/media/";
@@ -282,41 +284,40 @@ OpenGeoportal.MapController = function() {
 
 	};
 
-
 	/**
 	 * register event handlers for the map
 	 */
-	
+
 	this.moveEventId = null;
-	
+
 	this.registerMapEvents = function() {
 		var that = this;
 		// register events
-		
+
 		jQuery(document).on("container.resize", function(e, data) {
 
-			//update the size of the map if the container size actually changed.
+			// update the size of the map if the container size actually
+			// changed.
 			var map$ = jQuery(".olMap");
 
 			var newHeight = Math.max(data.ht, data.minHt);
 			var oldHeight = map$.height();
-			
+
 			var newWidth = Math.max(data.wd, data.minWd);
 			var oldWidth = map$.width();
-			
-			if (newHeight !== oldHeight || newWidth !== oldWidth){
+
+			if (newHeight !== oldHeight || newWidth !== oldWidth) {
 				map$.height(newHeight).width(newWidth);
 				that.updateSize();
 			}
-			
+
 		});
-		
 
 		// OpenLayers event
-	
+
 		this.events.register('zoomend', this, function() {
-			var zoomLevel = that.getZoom();		
-			
+			var zoomLevel = that.getZoom();
+
 			that.basemaps.checkZoom(zoomLevel);
 
 			var mapHeight = Math.pow((zoomLevel + 1), 2) / 2 * 256;
@@ -330,20 +331,19 @@ OpenGeoportal.MapController = function() {
 				jQuery("#" + that.mapDiv).height(mapHeight);// calculate min and
 				// max sizes
 				that.updateSize();
-				//console.log("update map size");
+				// console.log("update map size");
 			}
 			if (zoomLevel == 1) {
 				that.setCenter(that.WGS84ToMercator(that.getSearchCenter().lon,
 						0));
 			}
-			
-			
+
 		});
-		
+
 		// OpenLayers event
 		this.events.register('moveend', this, function() {
-			//var d = new Date();
-			//console.log("moveend: " + d.getTime());
+			// var d = new Date();
+			// console.log("moveend: " + d.getTime());
 			var newExtent = that.getSearchExtent();
 			var newCenter = that.getSearchCenter();
 
@@ -354,19 +354,18 @@ OpenGeoportal.MapController = function() {
 			 * 
 			 * @fires "map.extentChanged"
 			 */
-			
+
 			clearTimeout(this.moveEventId);
-			
-			var trigger = function(){
-				//console.log("extentChanged triggered");
+
+			var trigger = function() {
+				// console.log("extentChanged triggered");
 				jQuery(document).trigger('map.extentChanged', {
 					mapExtent : newExtent,
 					mapCenter : newCenter
 				});
 			};
-			
-			this.moveEventId = setTimeout(trigger, 100);
 
+			this.moveEventId = setTimeout(trigger, 100);
 
 		});
 
@@ -439,11 +438,12 @@ OpenGeoportal.MapController = function() {
 							"tilesloaded");
 
 					// Make sure Google logos, etc are displayed
-					jQuery("div.olLayerGooglePoweredBy").children()
-						.css("display", "block");
+					jQuery("div.olLayerGooglePoweredBy").children().css(
+							"display", "block");
 					// find the google logo and add class ".googleLogo",
 					// so we can make sure it always shows
-					jQuery("[id$=GMapContainer]").find('[title*="Click to see this area"]').parent()
+					jQuery("[id$=GMapContainer]").find(
+							'[title*="Click to see this area"]').parent()
 							.addClass("googleLogo");
 
 					// display the map once the google tiles are loaded
@@ -506,6 +506,10 @@ OpenGeoportal.MapController = function() {
 		if (this.getLayersBy("basemapType", model.get("type")).length === 0) {
 			// add the appropriate basemap layer
 			this.addLayer(model.get("getLayerDefinition").call(model));
+
+			// NARSS how to hide Basemap
+			//var layer = this.getLayersBy("basemapType", model.get("type"))[0];
+			//layer.setVisibility(false);
 		} else {
 			var layer = this.getLayersBy("basemapType", model.get("type"))[0];
 			layer.mapObject.setMapTypeId(model.get("subType"));
@@ -513,8 +517,8 @@ OpenGeoportal.MapController = function() {
 			layer.setVisibility(true);
 		}
 		jQuery("div.olLayerGooglePoweredBy").children().css("display", "block");
-		
-		if (model.has("secondaryZoomMap")){
+
+		if (model.has("secondaryZoomMap")) {
 			model.collection.checkZoom(this.getZoom());
 		}
 	};
@@ -543,6 +547,7 @@ OpenGeoportal.MapController = function() {
 	 */
 	this.createBaseMaps = function() {
 		var that = this;
+
 		var googlePhysical = {
 			displayName : "Google Physical",
 			name : "googlePhysical",
@@ -550,7 +555,7 @@ OpenGeoportal.MapController = function() {
 			subType : google.maps.MapTypeId.TERRAIN,
 			type : "Google",
 			zoomLevels : 15,
-			secondaryZoomMap: "googleStreets",
+			secondaryZoomMap : "googleStreets",
 			getLayerDefinition : that.googleMapsLayerDefinition,
 			showOperations : function() {
 				that.googleMapsShow(this);
@@ -620,6 +625,59 @@ OpenGeoportal.MapController = function() {
 			},
 			initialRenderCallback : that.googleMapsRenderCallback
 		};
+		
+		var googleBlank = {
+				displayName : "Blank Map",
+				name : "googleBlank",
+				selected : false,
+				type : "osm",
+				subType : "osm",
+				zoomLevels : 19,
+				getLayerDefinition : function() {
+					var attribution = "Tiles &copy; <a href='http://openstreetmap.org/'>OpenStreetMap</a> contributors, CC BY-SA &nbsp;";
+					attribution += "Data &copy; <a href='http://openstreetmap.org/'>OpenStreetMap</a> contributors, ODbL";
+
+					var bgMap = new OpenLayers.Layer.OSM(this.get("displayName"),
+							null, {
+								attribution : attribution,
+								basemapType : this.get("type"),
+								layerRole : "basemap"
+							});
+
+					return bgMap;
+				},
+
+				showOperations : function() {
+					// see if there is a basemap layer of the specified type
+					if (that.getLayersBy("basemapType", this.get("type")).length === 0) {
+						// add the appropriate basemap layer
+						var newLayer = this.get("getLayerDefinition").call(this);
+						var displayLayers = that.layers; // getLayerIndex
+						var highestBasemap = 0;
+						for ( var i in displayLayers) {
+							if (displayLayers[i].layerRole != "basemap") {
+								var indx = that.getLayerIndex(displayLayers[i]);
+								that.setLayerIndex(displayLayers[i], indx + 1);
+							} else {
+								highestBasemap = Math.max(highestBasemap, that
+										.getLayerIndex(displayLayers[i]));
+								newLayer.setVisibility(false);
+							}
+						}
+						that.addLayer(newLayer);
+						that.setLayerIndex(newLayer, highestBasemap + 1);
+					} else {
+						var layer = that.getLayersBy("basemapType", this
+								.get("type"))[0];
+						layer.setVisibility(false);
+					}
+
+				},
+				hideOperations : function() {
+					that.baseMapHide(this);
+				},
+				initialRenderCallback : that.initialRenderCallback
+			};
 
 		var osm = {
 			displayName : "OpenStreetMap",
@@ -631,15 +689,14 @@ OpenGeoportal.MapController = function() {
 			getLayerDefinition : function() {
 				var attribution = "Tiles &copy; <a href='http://openstreetmap.org/'>OpenStreetMap</a> contributors, CC BY-SA &nbsp;";
 				attribution += "Data &copy; <a href='http://openstreetmap.org/'>OpenStreetMap</a> contributors, ODbL";
-				
+
 				var bgMap = new OpenLayers.Layer.OSM(this.get("displayName"),
 						null, {
-							attribution: attribution,
+							attribution : attribution,
 							basemapType : this.get("type"),
 							layerRole : "basemap"
 						});
 
-				
 				return bgMap;
 			},
 
@@ -734,7 +791,8 @@ OpenGeoportal.MapController = function() {
 		};
 
 		// Bing maps implementation isn't quite ready for prime time
-		var models = [ googlePhysical, googleHybrid, googleStreets, googleSat, osm ];
+		var models = [ googlePhysical, googleHybrid,
+				googleStreets, googleSat, googleBlank, osm ];
 
 		// create an instance of the basemap collection
 		var collection = new OpenGeoportal.BasemapCollection(models);
@@ -759,7 +817,7 @@ OpenGeoportal.MapController = function() {
 							}
 						});
 	};
-	
+
 	this.zIndexHandler = function() {
 		var that = this;
 		jQuery(document)
@@ -869,19 +927,20 @@ OpenGeoportal.MapController = function() {
 							}
 						});
 		jQuery(document)
-			.on(
-				"map.attributeInfoOff",
-				function() {
-					// if neither zoom or pan is active, activate pan control
-					var zoomControl = that
-							.getControlsByClass("OpenLayers.Control.ZoomBox")[0];
+				.on(
+						"map.attributeInfoOff",
+						function() {
+							// if neither zoom or pan is active, activate pan
+							// control
+							var zoomControl = that
+									.getControlsByClass("OpenLayers.Control.ZoomBox")[0];
 
-					var panControl = that
-							.getControlsByClass("OpenLayers.Control.Navigation")[0];
-					if (!panControl.active && !zoomControl.active) {
-						panControl.activate();
-					}
-				});
+							var panControl = that
+									.getControlsByClass("OpenLayers.Control.Navigation")[0];
+							if (!panControl.active && !zoomControl.active) {
+								panControl.activate();
+							}
+						});
 	};
 
 	/**
@@ -899,43 +958,45 @@ OpenGeoportal.MapController = function() {
 		});
 	};
 
-	this.loadIndicatorHandler = function(){
+	this.loadIndicatorHandler = function() {
 		this.indicatorCollection = new OpenGeoportal.LoadIndicatorCollection();
-		this.indicatorView = new OpenGeoportal.Views.MapLoadIndicatorView({collection: this.indicatorCollection, template: this.template});
-	
-		var getCriteria = function(e){
+		this.indicatorView = new OpenGeoportal.Views.MapLoadIndicatorView({
+			collection : this.indicatorCollection,
+			template : this.template
+		});
+
+		var getCriteria = function(e) {
 			var actionObj = {};
 
-			if (typeof e.loadType === "undefined"){
+			if (typeof e.loadType === "undefined") {
 				actionObj.actionType = "generic";
 			} else {
 				actionObj.actionType = e.loadType;
 			}
-			
-			if (typeof e.layerId === "undefined"){
+
+			if (typeof e.layerId === "undefined") {
 				actionObj.actionId = "unspecified";
 			} else {
 				actionObj.actionId = e.layerId;
 			}
-			
+
 			return actionObj;
 		};
 		var that = this;
-		jQuery(document).on("showLoadIndicator", function(e){
+		jQuery(document).on("showLoadIndicator", function(e) {
 
-			that.indicatorCollection.add([getCriteria(e)]);
+			that.indicatorCollection.add([ getCriteria(e) ]);
 		});
-		
-		jQuery(document).on("hideLoadIndicator", function(e){
+
+		jQuery(document).on("hideLoadIndicator", function(e) {
 
 			var model = that.indicatorCollection.findWhere(getCriteria(e));
-			if (typeof model !== "undefined"){
+			if (typeof model !== "undefined") {
 				that.indicatorCollection.remove(model);
 			}
 		});
 	};
-	
-	
+
 	/***************************************************************************
 	 * map utility functions
 	 **************************************************************************/
@@ -1161,7 +1222,8 @@ OpenGeoportal.MapController = function() {
 		// is layer public or private? is this a request that can be handled by
 		// a tilecache?
 
-		var urlArraySize = 1; // this seems to be a good size for OpenLayers performance
+		var urlArraySize = 1; // this seems to be a good size for OpenLayers
+								// performance
 		var urlArray = [];
 		var populateUrlArray = function(addressArray) {
 			if (addressArray.length == 1) {
@@ -1280,48 +1342,49 @@ OpenGeoportal.MapController = function() {
 		var bottomLeft = this.WGS84ToMercator(mapObj.west, mapObj.south);
 		var topRight = this.WGS84ToMercator(mapObj.east, mapObj.north);
 
-		//if pixel distance b/w topRight and bottomLeft falls below a certain threshold, 
-		//add a marker(fixed pixel size) in the center, so the user can see where the layer is
+		// if pixel distance b/w topRight and bottomLeft falls below a certain
+		// threshold,
+		// add a marker(fixed pixel size) in the center, so the user can see
+		// where the layer is
 		var blPixel = this.getPixelFromLonLat(bottomLeft);
 		var trPixel = this.getPixelFromLonLat(topRight);
 		var pixelDistance = blPixel.distanceTo(trPixel);
 		var threshold = 10;
 		var displayMarker = false;
-		
-		if (pixelDistance <= threshold){
+
+		if (pixelDistance <= threshold) {
 			displayMarker = true;
 		}
 
-		
 		var arrFeatures = [];
 		if (bottomLeft.lon > topRight.lon) {
 			var dateline = this.WGS84ToMercator(180, 0).lon;
-			var geom1 = new OpenLayers.Bounds(
-					bottomLeft.lon, bottomLeft.lat, dateline, topRight.lat)
-					.toGeometry();
-			var geom2 = new OpenLayers.Bounds(
-					topRight.lon, topRight.lat, -1 * dateline, bottomLeft.lat)
-					.toGeometry();
+			var geom1 = new OpenLayers.Bounds(bottomLeft.lon, bottomLeft.lat,
+					dateline, topRight.lat).toGeometry();
+			var geom2 = new OpenLayers.Bounds(topRight.lon, topRight.lat, -1
+					* dateline, bottomLeft.lat).toGeometry();
 			arrFeatures.push(new OpenLayers.Feature.Vector(geom1));
 			arrFeatures.push(new OpenLayers.Feature.Vector(geom2));
 
-			if (displayMarker){
-				arrFeatures.push(new OpenLayers.Feature.Vector(geom1.getCentroid()));
+			if (displayMarker) {
+				arrFeatures.push(new OpenLayers.Feature.Vector(geom1
+						.getCentroid()));
 			}
-			
+
 		} else {
-			var geom = new OpenLayers.Bounds(
-					bottomLeft.lon, bottomLeft.lat, topRight.lon, topRight.lat).toGeometry();
-			
+			var geom = new OpenLayers.Bounds(bottomLeft.lon, bottomLeft.lat,
+					topRight.lon, topRight.lat).toGeometry();
+
 			var box = new OpenLayers.Feature.Vector(geom);
-			
+
 			arrFeatures.push(box);
-			
-			if (displayMarker){
-				arrFeatures.push(new OpenLayers.Feature.Vector(geom.getCentroid()));
+
+			if (displayMarker) {
+				arrFeatures.push(new OpenLayers.Feature.Vector(geom
+						.getCentroid()));
 			}
 		}
-		
+
 		featureLayer.addFeatures(arrFeatures);
 		this.setLayerIndex(featureLayer, (this.layers.length - 1));
 
@@ -1350,8 +1413,6 @@ OpenGeoportal.MapController = function() {
 		var layerLeft = bottomLeft.lon;
 		var layerRight = topRight.lon;
 
-
-		
 		var showEWArrows = true;
 		// don't show arrows for east and west offscreen if multiple "worlds"
 		// are on screen
@@ -1444,8 +1505,8 @@ OpenGeoportal.MapController = function() {
 		var request = this.createImageRequest();
 		this.requestQueue.add(request);
 	};
-	
-	this.createImageRequest = function(){
+
+	this.createImageRequest = function() {
 
 		var requestObj = {};
 		requestObj.layers = [];
@@ -1561,15 +1622,15 @@ OpenGeoportal.MapController = function() {
 													jQuery(this)
 															.attr('title',
 																	attributeDescription);
-													var attr = layerAttrs.findWhere(
-																	{
-																		attributeName : attributeName
-																	});
-													if (typeof attr != "undefined"){
-															attr.set(
-																	{
-																		description : attributeDescription
-																	});
+													var attr = layerAttrs
+															.findWhere({
+																attributeName : attributeName
+															});
+													if (typeof attr != "undefined") {
+														attr
+																.set({
+																	description : attributeDescription
+																});
 													}
 													return;
 												}
@@ -1646,14 +1707,14 @@ OpenGeoportal.MapController = function() {
 					+ mapObject.size.w;
 
 			var params = {
-					ogpid: layerId,
-					bbox: mapExtent.toBBOX(),
-					x: Math.round(pixel.x),
-					y: Math.round(pixel.y),
-					height: mapObject.size.h,
-					width: mapObject.size.w
+				ogpid : layerId,
+				bbox : mapExtent.toBBOX(),
+				x : Math.round(pixel.x),
+				y : Math.round(pixel.y),
+				height : mapObject.size.h,
+				width : mapObject.size.w
 			};
-			
+
 			var layerModel = mapObject.previewed.findWhere({
 				LayerId : layerId
 			});
@@ -1670,12 +1731,17 @@ OpenGeoportal.MapController = function() {
 						// abort any outstanding requests before submitting a
 						// new one
 						for ( var i in mapObject.currentAttributeRequests) {
-							var request = mapObject.currentAttributeRequests.splice(i, 1)[0];
+							var request = mapObject.currentAttributeRequests
+									.splice(i, 1)[0];
 							request.featureRequest.abort();
 						}
 					}
 
-					jQuery(document).trigger({type: "showLoadIndicator", loadType: "getFeature", layerId: layerId});
+					jQuery(document).trigger({
+						type : "showLoadIndicator",
+						loadType : "getFeature",
+						layerId : layerId
+					});
 				},
 				success : function(data, textStatus, XMLHttpRequest) {
 
@@ -1685,7 +1751,7 @@ OpenGeoportal.MapController = function() {
 				error : function(jqXHR, textStatus, errorThrown) {
 					if ((jqXHR.status != 401) && (textStatus != 'abort')) {
 						throw new Error("Error retrieving Feature Information.");
-							
+
 					}
 				},
 				complete : function(jqXHR) {
@@ -1695,11 +1761,18 @@ OpenGeoportal.MapController = function() {
 
 						}
 					}
-					jQuery(document).trigger({type: "hideLoadIndicator", loadType: "getFeature", layerId: layerId});
+					jQuery(document).trigger({
+						type : "hideLoadIndicator",
+						loadType : "getFeature",
+						layerId : layerId
+					});
 				}
 			};
 
-			mapObject.currentAttributeRequests.push({layerId: layerId, featureRequest: jQuery.ajax(ajaxParams)});
+			mapObject.currentAttributeRequests.push({
+				layerId : layerId,
+				featureRequest : jQuery.ajax(ajaxParams)
+			});
 
 			analytics.track("Layer Attributes Viewed", institution, layerId);
 		} else {
@@ -1718,7 +1791,7 @@ OpenGeoportal.MapController = function() {
 		if (!layerModel.has("layerAttributes")) {
 			var attributes = new OpenGeoportal.Attributes();
 			for ( var i in attrNames) {
-				if (attrNames.hasOwnProperty(i)){
+				if (attrNames.hasOwnProperty(i)) {
 					var attrModel = new OpenGeoportal.Models.Attribute({
 						attributeName : attrNames[i]
 					});
@@ -1863,8 +1936,8 @@ OpenGeoportal.MapController = function() {
 		var ajaxParams = {
 			type : "GET",
 			url : 'info/wmsInfo', // don't throw a 500 error for layers with
-									// service start. otherwise, throw the
-									// error, or note in 200 response
+			// service start. otherwise, throw the
+			// error, or note in 200 response
 			data : queryData,
 			dataType : 'json',
 			success : function(data) {
@@ -1882,19 +1955,28 @@ OpenGeoportal.MapController = function() {
 				// let the user know the layer is not previewable
 				// remove the layer from preview panel
 				// throw new Error("layer could not be added");
-				//console.log("got an error trying to get layer info");
+				// console.log("got an error trying to get layer info");
 			},
 			complete : function() {
-				//jQuery("body").trigger(model.get("LayerId") + 'Exists');
+				// jQuery("body").trigger(model.get("LayerId") + 'Exists');
 
-				jQuery(document).trigger({type: "hideLoadIndicator", loadType: "getWmsInfo", layerId: model.get("LayerId")});
+				jQuery(document).trigger({
+					type : "hideLoadIndicator",
+					loadType : "getWmsInfo",
+					layerId : model.get("LayerId")
+				});
 			}
 		};
 		jQuery.ajax(ajaxParams);
-		//for now, don't wait for wmsinfo response to start loading the layer; perhaps only call if there is an error
+		// for now, don't wait for wmsinfo response to start loading the layer;
+		// perhaps only call if there is an error
 		jQuery("body").trigger(model.get("LayerId") + 'Exists');
 
-		jQuery(document).trigger({type: "showLoadIndicator", loadType: "getWmsInfo", layerId: model.get("LayerId")});
+		jQuery(document).trigger({
+			type : "showLoadIndicator",
+			loadType : "getWmsInfo",
+			layerId : model.get("LayerId")
+		});
 
 	};
 
@@ -1939,7 +2021,7 @@ OpenGeoportal.MapController = function() {
 		var dataType = layerModel.get("DataType").toLowerCase();
 		var userSLD = {};
 
-        var wmsName = layerModel.get("qualifiedName");
+		var wmsName = layerModel.get("qualifiedName");
 		// don't use a tilecache
 		layer.url = this.getPreviewUrlArray(layerModel, false);
 		var userColor = layerModel.get("color");
@@ -2104,12 +2186,11 @@ OpenGeoportal.MapController = function() {
 		this.setLayerIndex(featureLayer, (this.layers.length - 1));
 	};
 
-
-	
 	this.getLayerName = function(layerModel, url) {
 		var layerName = layerModel.get("Name");
 		var wmsNamespace = layerModel.get("WorkspaceName");
-		//if there is a workspace name listed and the layername doesn't already contain one, prepend it
+		// if there is a workspace name listed and the layername doesn't already
+		// contain one, prepend it
 		var qualifiedName = layerName;
 		if ((wmsNamespace.length > 0) && (layerName.indexOf(":") == -1)) {
 			qualifiedName = wmsNamespace + ":" + layerName;
@@ -2121,122 +2202,137 @@ OpenGeoportal.MapController = function() {
 
 		return layerName;
 	};
-	
-	this.getMaxZ = function(){
-		var arrZ = [];
-		_.each(this.layers, function(layer){
-				arrZ.push(layer.getZIndex());
-			});
-		return _.max(arrZ);
-	},
-	
-	this.getNextZ = function(){
-		return this.getMaxZ() + 5;
-	},
-	
-	
-	this.addWMSLayer = function(layerModel) {
-		// mapObj requires institution, layerName, title, datatype, access
-		/*
-		 * var bottomLeft = this.WGS84ToMercator(mapObj.west, mapObj.south); var
-		 * topRight = this.WGS84ToMercator(mapObj.east, mapObj.north); var
-		 * bounds = new OpenLayers.Bounds(); bounds.extend(new
-		 * OpenLayers.LonLat(bottomLeft.lon, bottomLeft.lat)); bounds.extend(new
-		 * OpenLayers.LonLat(topRight.lon, topRight.lat)); console.log(bounds);
-		 * var box = new OpenLayers.Feature.Vector(bounds.toGeometry()); var
-		 * featureLayer = new OpenLayers.Layer.Vector("BBoxTest");
-		 * featureLayer.addFeatures([box]); this.addLayer(featureLayer);
-		 */
 
-		var layerId = layerModel.get("LayerId");
-		// check to see if layer is on openlayers map, if so, show layer
-		var opacitySetting = layerModel.get("opacity");
-		var that = this;
-		
-		var matchingLayers = this.getLayersBy("ogpLayerId", layerId);
-
-		if (matchingLayers.length > 1) {
-			throw new Error("ERROR: There should never be more than one copy of the layer on the map");
-		} else if (matchingLayers.length === 1){
-		
-			_.each(matchingLayers, function(layer){
-				var nextZ = that.getNextZ();
-				layerModel.set({zIndex: nextZ});
-			
-				that.showLayer(layerId);
-				layer.setOpacity(opacitySetting * .01);
-			
-			});
-			return;
-		}
-
-
-
-		// use a tilecache if we are aware of it
-
-		var wmsArray = this.getPreviewUrlArray(layerModel, true);
-	
-
-		// won't actually do anything, since noMagic is true and transparent is
-		// true
-		var format;
-		if (layerModel.isVector) {
-			format = "image/png";
-		} else {
-			format = "image/jpeg";
-		}
-
-		
-		// we do a check to see if the layer exists before we add it
-		jQuery("body").bind(layerModel.get("LayerId") + 'Exists',
-				function() {
-					// if this is a raster layer, we should use jpeg format, png for vector
-					// (per geoserver docs)
-					var layerName = that.getLayerName(layerModel, wmsArray[0]);
-						
-					var newLayer = new OpenLayers.Layer.WMS(
-							layerModel.get("LayerDisplayName"), 
-							wmsArray, 
-						{
-							layers : layerName, 
-							format : format,
-							tiled : true,
-							exceptions : "application/vnd.ogc.se_xml",
-							transparent : true,
-							version : "1.3.0"
-						}, {
-							transitionEffect : 'resize',
-							opacity : opacitySetting * .01,
-							ogpLayerId : layerModel.get("LayerId"),
-							ogpLayerRole : "LayerPreview"
-					});
-			
-					newLayer.events.register('loadstart', newLayer, function() {
-						//console.log("Load start");
-						jQuery(document).trigger({type: "showLoadIndicator", loadType: "layerLoad", layerId: layerModel.get("LayerId")});
-					});
-
-					newLayer.events.register('loadend', newLayer, function() {
-						//console.log("Load end");
-						jQuery(document).trigger({type: "hideLoadIndicator", loadType: "layerLoad", layerId: layerModel.get("LayerId")});
-					});
-					
-					//console.log("wms layer");
-					//console.log(layerModel);
-					//console.log("openlayers layer");
-					//console.log(newLayer);
-					
-					that.addLayer(newLayer);
-					try {
-					layerModel.set({zIndex: newLayer.getZIndex()});
-					} catch (e){
-						console.log(e);
-						console.log(newLayer.getZIndex());
-					}
+			this.getMaxZ = function() {
+				var arrZ = [];
+				_.each(this.layers, function(layer) {
+					arrZ.push(layer.getZIndex());
 				});
-		this.layerExists(layerModel);
+				return _.max(arrZ);
+			},
 
-	};
+			this.getNextZ = function() {
+				return this.getMaxZ() + 5;
+			},
+
+			this.addWMSLayer = function(layerModel) {
+				// mapObj requires institution, layerName, title, datatype,
+				// access
+				/*
+				 * var bottomLeft = this.WGS84ToMercator(mapObj.west,
+				 * mapObj.south); var topRight =
+				 * this.WGS84ToMercator(mapObj.east, mapObj.north); var bounds =
+				 * new OpenLayers.Bounds(); bounds.extend(new
+				 * OpenLayers.LonLat(bottomLeft.lon, bottomLeft.lat));
+				 * bounds.extend(new OpenLayers.LonLat(topRight.lon,
+				 * topRight.lat)); console.log(bounds); var box = new
+				 * OpenLayers.Feature.Vector(bounds.toGeometry()); var
+				 * featureLayer = new OpenLayers.Layer.Vector("BBoxTest");
+				 * featureLayer.addFeatures([box]); this.addLayer(featureLayer);
+				 */
+
+				var layerId = layerModel.get("LayerId");
+				// check to see if layer is on openlayers map, if so, show layer
+				var opacitySetting = layerModel.get("opacity");
+				var that = this;
+
+				var matchingLayers = this.getLayersBy("ogpLayerId", layerId);
+
+				if (matchingLayers.length > 1) {
+					throw new Error(
+							"ERROR: There should never be more than one copy of the layer on the map");
+				} else if (matchingLayers.length === 1) {
+
+					_.each(matchingLayers, function(layer) {
+						var nextZ = that.getNextZ();
+						layerModel.set({
+							zIndex : nextZ
+						});
+
+						that.showLayer(layerId);
+						layer.setOpacity(opacitySetting * .01);
+
+					});
+					return;
+				}
+
+				// use a tilecache if we are aware of it
+
+				var wmsArray = this.getPreviewUrlArray(layerModel, true);
+
+				// won't actually do anything, since noMagic is true and
+				// transparent is
+				// true
+				var format;
+				if (layerModel.isVector) {
+					format = "image/png";
+				} else {
+					format = "image/jpeg";
+				}
+
+				// we do a check to see if the layer exists before we add it
+				jQuery("body").bind(
+						layerModel.get("LayerId") + 'Exists',
+						function() {
+							// if this is a raster layer, we should use jpeg
+							// format, png for vector
+							// (per geoserver docs)
+							var layerName = that.getLayerName(layerModel,
+									wmsArray[0]);
+
+							var newLayer = new OpenLayers.Layer.WMS(layerModel
+									.get("LayerDisplayName"), wmsArray, {
+								layers : layerName,
+								format : format,
+								tiled : true,
+								exceptions : "application/vnd.ogc.se_xml",
+								transparent : true,
+								version : "1.3.0"
+							}, {
+								transitionEffect : 'resize',
+								opacity : opacitySetting * .01,
+								ogpLayerId : layerModel.get("LayerId"),
+								ogpLayerRole : "LayerPreview"
+							});
+
+							newLayer.events.register('loadstart', newLayer,
+									function() {
+										// console.log("Load start");
+										jQuery(document).trigger({
+											type : "showLoadIndicator",
+											loadType : "layerLoad",
+											layerId : layerModel.get("LayerId")
+										});
+									});
+
+							newLayer.events.register('loadend', newLayer,
+									function() {
+										// console.log("Load end");
+										jQuery(document).trigger({
+											type : "hideLoadIndicator",
+											loadType : "layerLoad",
+											layerId : layerModel.get("LayerId")
+										});
+									});
+
+							// console.log("wms layer");
+							// console.log(layerModel);
+							// console.log("openlayers layer");
+							// console.log(newLayer);
+
+							that.addLayer(newLayer);
+							try {
+								layerModel.set({
+									zIndex : newLayer.getZIndex()
+								});
+							} catch (e) {
+								console.log(e);
+								console.log(newLayer.getZIndex());
+							}
+						});
+				this.layerExists(layerModel);
+
+			};
 
 	// thanks to Allen Lin, U of MN
 	this.addArcGISRestLayer = function(layerModel) {
@@ -2244,24 +2340,27 @@ OpenGeoportal.MapController = function() {
 		// check to see if layer is on openlayers map, if so, show layer
 		var opacitySetting = layerModel.get("opacity");
 		var that = this;
-		
+
 		var matchingLayers = this.getLayersBy("ogpLayerId", layerId);
 
 		if (matchingLayers.length > 1) {
-			throw new Error("ERROR: There should never be more than one copy of the layer on the map");
-		} else if (matchingLayers.length === 1){
-		
-			_.each(matchingLayers, function(layer){
+			throw new Error(
+					"ERROR: There should never be more than one copy of the layer on the map");
+		} else if (matchingLayers.length === 1) {
+
+			_.each(matchingLayers, function(layer) {
 				var nextZ = that.getNextZ();
-				layerModel.set({zIndex: nextZ});
-			
+				layerModel.set({
+					zIndex : nextZ
+				});
+
 				that.showLayer(layerId);
 				layer.setOpacity(opacitySetting * .01);
-			
+
 			});
 			return;
 		}
-		
+
 		// won't actually do anything, since noMagic is true and transparent is
 		// true
 		var format;
@@ -2273,10 +2372,9 @@ OpenGeoportal.MapController = function() {
 
 		// if this is a raster layer, we should use jpeg format, png for vector
 		// (per geoserver docs)
-		var newLayer = new OpenLayers.Layer.ArcGIS93Rest(
-				layerModel.get("LayerDisplayName"),
-				layerModel.get("Location").ArcGISRest, 
-				{
+		var newLayer = new OpenLayers.Layer.ArcGIS93Rest(layerModel
+				.get("LayerDisplayName"),
+				layerModel.get("Location").ArcGISRest, {
 					layers : "show:" + layerModel.get("Name"),
 					transparent : true
 				}, {
@@ -2288,10 +2386,18 @@ OpenGeoportal.MapController = function() {
 		newLayer.projection = new OpenLayers.Projection("EPSG:3857");
 		// how should this change? trigger custom events with jQuery
 		newLayer.events.register('loadstart', newLayer, function() {
-			jQuery(document).trigger({type: "showLoadIndicator", loadType: "layerLoad", layerId: layerId});
+			jQuery(document).trigger({
+				type : "showLoadIndicator",
+				loadType : "layerLoad",
+				layerId : layerId
+			});
 		});
 		newLayer.events.register('loadend', newLayer, function() {
-			jQuery(document).trigger({type: "hideLoadIndicator", loadType: "layerLoad", layerId: layerId});
+			jQuery(document).trigger({
+				type : "hideLoadIndicator",
+				loadType : "layerLoad",
+				layerId : layerId
+			});
 		});
 		var that = this;
 		// we do a cursory check to see if the layer exists before we add it
@@ -2425,9 +2531,8 @@ OpenGeoportal.MapController = function() {
 			currModel.set({
 				preview : "off"
 			});
-			throw new Error(
-					'Unable to Preview layer "'
-							+ currModel.get("LayerDisplayName") + '"');
+			throw new Error('Unable to Preview layer "'
+					+ currModel.get("LayerDisplayName") + '"');
 		}
 
 	};
