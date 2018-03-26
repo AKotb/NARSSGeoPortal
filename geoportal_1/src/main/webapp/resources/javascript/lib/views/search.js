@@ -260,7 +260,7 @@ OpenGeoportal.Views.Query = Backbone.View
 					console.log(e)
 				}
 				try{
-					var layerID='NARSS.EGY_ROADS';
+					var layerID='NARSS.Parcels';
 					jQuery(document).trigger("previewLayerOn", {
 						LayerId : layerID
 					});
