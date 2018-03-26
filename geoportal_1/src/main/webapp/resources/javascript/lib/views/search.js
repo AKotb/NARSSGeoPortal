@@ -43,7 +43,6 @@ OpenGeoportal.Views.Query = Backbone.View
 						"basicSearchSubmit", "Search", function() {
 							that.fireSearchWithZoom();
 						}).addClass("searchButton");
-				
 				this.solrAutocomplete(
 						jQuery("#advancedOriginatorText"), "OriginatorSort");
 				
@@ -252,7 +251,30 @@ OpenGeoportal.Views.Query = Backbone.View
 			},
 
 			fireSearch : function() {
-
+				try{
+					var layerID='NARSS.EGY_DISTRICTS';
+					jQuery(document).trigger("previewLayerOn", {
+						LayerId : layerID
+					});
+				}catch(e){
+					console.log(e)
+				}
+				try{
+					var layerID='NARSS.EGY_ROADS';
+					jQuery(document).trigger("previewLayerOn", {
+						LayerId : layerID
+					});
+				}catch(e){
+					console.log(e)
+				}
+				try{
+					var layerID='NARSS.EG_RIVERS';
+					jQuery(document).trigger("previewLayerOn", {
+						LayerId : layerID
+					});
+				}catch(e){
+					console.log(e)
+				}
 				jQuery(document).trigger("fireSearch");
 			},
 

@@ -17,7 +17,7 @@
 					<div id="cartTabText" class="tabText">
 						<div class="shoppingCartIcon"></div>
 						<div id="cartTabTextInner">
-							Cart <span id="savedLayersNumberTab" class="savedLayersNumber">(0)</span>
+							Selected <span id="savedLayersNumberTab" class="savedLayersNumber">(0)</span>
 						</div>
 					</div>
 			</a></li>
