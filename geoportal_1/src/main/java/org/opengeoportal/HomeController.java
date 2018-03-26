@@ -96,15 +96,15 @@ public class HomeController {
 			@RequestParam(value = "dev", defaultValue = "false") Boolean isDev) throws Exception {
 		ModelAndView mav = new ModelAndView("ogp_home");
 		mav.addObject("dev", isDev);
-		layers.add("NARSS.EGY_ROADS");
+		layers.add("NARSS.Parcels");
 		if (!layerIds.isEmpty()) {
 			mav.addObject("shareIds", getQuotedSet(layerIds));
 			mav.addObject("shareBbox", bbox);
 		} else if (!layers.isEmpty()) {
-			minx="24.81860167059555";
-			miny="22.004806420363636";
-			maxx="35.61644362140641";
-			maxy="31.60827818240766";
+			minx="29.850088";
+			miny="22.005644";
+			maxx="33.08036";
+			maxy="31.524937";
 			mav.addObject("shareIds", getQuotedSet(layers));
 			mav.addObject("shareBbox", minx + "," + miny + "," + maxx + "," + maxy);
 		} else {

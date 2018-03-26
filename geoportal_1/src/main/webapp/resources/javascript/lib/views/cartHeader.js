@@ -163,17 +163,17 @@ OpenGeoportal.Views.CartHeader = Backbone.View.extend({
 
 		};
 		
-		this.addCartHeaderButton("removeFromCartButton", "Remove", removeHtml,
-				"removeFromCart", removeClick, removeHover);
+		/*this.addCartHeaderButton("removeFromCartButton", "Remove", removeHtml,
+				"removeFromCart", removeClick, removeHover);*/
 		this.addCartHeaderButton("downloadButton", "Download", downloadHtml,
 				"download", downloadClick, downloadHover);
-		this.addCartHeaderButton("webServiceButton", "Web Service",
+		/*this.addCartHeaderButton("webServiceButton", "Web Service",
 				webServiceHtml, "webService", webServicesClick,
 				webServicesHover);
 		this.addCartHeaderButton("shareButton", "Share", shareHtml,
 				"shareLink", shareCartClick, shareCartHover);
 		this.addCartHeaderButton("mapItButton", "MapIt", mapItHtml, "mapIt",
-				mapItClick, mapItHover);
+				mapItClick, mapItHover);*/
 
 		// Hover handler
 		var hideDetails = function() {

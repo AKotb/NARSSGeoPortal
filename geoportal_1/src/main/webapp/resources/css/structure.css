@@ -327,6 +327,17 @@ li.searchAttribution.ui-widget-content.ui-menu-divider {
 	position: relative;
 }
 
+#featureInfoDiv {
+	background-color: #FFF;
+	overflow: hidden;
+	height: 256px;
+	width: 100%;
+	position: relative;
+	overflow-y: scroll;
+	border-style:solid;
+	border-color: #555555;
+}
+
 #map {
 	opacity: 0;
 	min-width: 1050px;
@@ -587,6 +598,7 @@ textarea:focus {
 	width: 100%;
 	z-index: 1500;
 	min-width: 1050px;
+	display: none;
 	
 }
 
@@ -650,7 +662,7 @@ textarea:focus {
 }
 
 #basicSearchBox {
-	display: block;
+	display: none;
 }
 
 #basicSearchMapFilterContainer {

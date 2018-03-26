@@ -46,7 +46,7 @@ OpenGeoportal.Config.shareBbox="${shareBbox}";
 		</div>
 		<div id="map"></div>
 	</div>
-	
+	<div id="featureInfoDiv"></div>
 	<%@include file="jspf/footer.jspf"%>
 
 	<div id="dialogs" class="hiddenElements">

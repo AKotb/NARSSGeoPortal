@@ -145,7 +145,8 @@ OpenGeoportal.Structure = function() {
 	};
 
 	this.aboutHandler = function() {
-		jQuery('#about').dialog({
+        
+		jQuery("#about").dialog({
 			zIndex : 2999,
 			title : "About",
 			resizable : false,
@@ -153,8 +154,9 @@ OpenGeoportal.Structure = function() {
 			minWidth : 473,
 			autoOpen : false
 		});
-		jQuery("#aboutLink").click(function() {
-			jQuery('#about').dialog("open");
+                
+		jQuery("#highlightsLink").click(function() {
+                        jQuery("#about").dialog("open");
 			analytics.track("Help", "Show About");
 		});
 	};
