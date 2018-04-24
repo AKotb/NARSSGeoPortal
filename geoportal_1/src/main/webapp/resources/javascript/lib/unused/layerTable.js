@@ -604,7 +604,7 @@ OpenGeoportal.LayerTable = function LayerTable() {
 		// console.log(arrData[0]);
 		// reset the data in the backbone collection
 		this.backingData.reset(solrLayers);
-
+		
 		return arrData;
 
 	};

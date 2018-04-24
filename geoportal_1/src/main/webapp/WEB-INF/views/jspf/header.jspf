@@ -1,14 +1,14 @@
 <div id="header">
 
 	<div id="logo" onclick="location.href=location.href">
-		<div id="logoGraphic"></div><div class="logoText">${titlePrimary}</div> <div class="logoText offsetColor">${titleOffset}</div>
+		<div id="logoGraphic"></div><div class="logoText">Web application for standardized geo-spatial data System for Egyptian Governorates</div> <div class="logoText offsetColor">${titleOffset}</div>
 	</div>
 	<div id="top_menu">
-		<button class="reset button headerButton">Reset</button> 
+		<button class="reset button headerButton" style="display: none;">Reset</button> 
 		<span class="separator" style="display: none;">|</span> 
 		<button id="userGuideLink" class="infoLinks button headerButton" style="display: none;">Help</button>
 		<span class="separator">|</span> 
-		<button id="highlightsLink" class="infoLinks button headerButton">About</button> 
+		<button id="highlightsLink" class="infoLinks button headerButton" style="display: none;">About</button> 
 		<span class="separator" style="display: none;">|</span> 
 		<button id="headerLogin" class="infoLinks login button headerButton" style="display: none;">Login</button>
 	</div>

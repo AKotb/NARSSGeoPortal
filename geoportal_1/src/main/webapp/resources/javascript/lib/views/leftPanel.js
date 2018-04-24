@@ -27,6 +27,7 @@ OpenGeoportal.Views.LeftPanel = Backbone.View
 				"click .arrow_right" : "goRight",
 				"click .arrow_left" : "goLeft"
 			},
+			
 			// these are really controllers
 			goRight : function() {
 				// analytics.track("Interface", "Expand/Collapse Buttons",
