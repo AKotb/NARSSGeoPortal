@@ -146,6 +146,12 @@ table, th, td {
 					if(govcode =='32'){
 						window.location.href = "<c:url value='view_wadigedeed'/>";
 					}
+					
+					// Qalyoubia Governorate clicked
+					if(govcode =='14'){
+						window.location.href = "<c:url value='view_qalyoubia'/>";
+					}
+					
 				});
 				
 				map.data.addListener('mouseover', function(event) {

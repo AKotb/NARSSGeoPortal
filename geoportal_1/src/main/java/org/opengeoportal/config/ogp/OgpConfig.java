@@ -15,6 +15,10 @@ public class OgpConfig {
 	String cssLocalized;
 	URL searchUrl;
 	String analyticsId;
+	String fayoumLayers;
+	String beheiraLayers;
+	String wadigedeedLayers;
+	String qalyoubiaLayers;
 	LoginConfig loginConfig = new LoginConfig();
 	
 	public String getPageTitlePrimary() {
@@ -73,6 +77,38 @@ public class OgpConfig {
 		this.loginConfig = loginConfig;
 	}
 
+	public String getFayoumLayers() {
+		return fayoumLayers;
+	}
+
+	public void setFayoumLayers(String fayoumLayers) {
+		this.fayoumLayers = fayoumLayers;
+	}
+
+	public String getBeheiraLayers() {
+		return beheiraLayers;
+	}
+
+	public void setBeheiraLayers(String beheiraLayers) {
+		this.beheiraLayers = beheiraLayers;
+	}
+
+	public String getWadigedeedLayers() {
+		return wadigedeedLayers;
+	}
+
+	public void setWadigedeedLayers(String wadigedeedLayers) {
+		this.wadigedeedLayers = wadigedeedLayers;
+	}
+
+	public String getQalyoubiaLayers() {
+		return qalyoubiaLayers;
+	}
+
+	public void setQalyoubiaLayers(String qalyoubiaLayers) {
+		this.qalyoubiaLayers = qalyoubiaLayers;
+	}
+	
 	public class LoginConfig {
 		String repositoryId;
 		String type;
