@@ -20,7 +20,7 @@ public class LayerDownloaderProviderTest {
     String downloadConfigJsonPath = "org/opengeoportal/download/ogpDownloadConfig_default.json";
     LayerDownloaderProvider layerDownloaderProvider;
 
-    @Before
+   @Before
     public void setupTests() throws IOException {
         Resource resource = new ClassPathResource(downloadConfigJsonPath);
         ObjectMapper mapper = new ObjectMapper();

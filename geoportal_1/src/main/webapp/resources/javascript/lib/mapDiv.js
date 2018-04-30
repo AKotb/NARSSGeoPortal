@@ -1839,12 +1839,12 @@ OpenGeoportal.MapController = function() {
 
 		}
 
-		jQuery("#featureInfoDiv").html(tableText);
+		//jQuery("#featureInfoDiv").html(tableText);
 		
 		// create a new dialog instance, or just open the dialog if it already
 		// exists
 
-		/*if (typeof jQuery('#featureInfo')[0] === 'undefined') {
+		if (typeof jQuery('#featureInfo')[0] === 'undefined') {
 			var infoDiv = template.genericDialogShell({
 				elId : "featureInfo"
 			});
@@ -1873,7 +1873,7 @@ OpenGeoportal.MapController = function() {
 
 			jQuery("#featureInfo").dialog('open');
 			jQuery("#featureInfo").fadeIn(200);
-		});*/
+		});
 
 	};
 
