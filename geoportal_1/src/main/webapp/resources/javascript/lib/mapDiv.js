@@ -1838,8 +1838,6 @@ OpenGeoportal.MapController = function() {
 			this.registerAttributes(layerId, attrNames);
 
 		}
-
-		//jQuery("#featureInfoDiv").html(tableText);
 		
 		// create a new dialog instance, or just open the dialog if it already
 		// exists
