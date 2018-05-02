@@ -28,6 +28,8 @@
 
 	strong, b {
 		font-weight: 700;
+		font-size: 22px;
+		padding-left: 24em;
 	}
 
 	em, i {
@@ -482,9 +484,9 @@
 /* Wrapper */
 
 	.wrapper.style1 {
-		padding-top: 10em;
-		padding-bottom: 2em;
-		background: url(../css/images/bg.jpg) no-repeat center top;
+		padding-top: 9em;
+		padding-bottom: 0em;
+		/*background: url(../css/images/bg.jpg) no-repeat center top;*/
 		background-size: cover;
 		background-attachment: fixed;
 		-webkit-backface-visibility: hidden;

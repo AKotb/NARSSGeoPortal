@@ -12,6 +12,7 @@
 
 <link rel="stylesheet" href="resources/css/jquery-ui-ogpTheme.custom.css" type="text/css" />
 
+
 <script>
 if (!Object.create) {
 	Object.create = function(o) {
